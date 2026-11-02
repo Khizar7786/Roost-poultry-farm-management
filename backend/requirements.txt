@@ -1,0 +1,13 @@
+Django==5.2.18
+djangorestframework==3.17.1
+djangorestframework-simplejwt==5.5.1
+django-cors-headers==4.9.0
+Pillow==12.1.1
+numpy==2.4.4
+scipy==1.17.1
+requests==2.33.1
+tensorflow==2.21.0
+xgboost==3.2.0
+scikit-learn==1.8.0
+hijridate==2.6.0
+pandas==3.1.0
