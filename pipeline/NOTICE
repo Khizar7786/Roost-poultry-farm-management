@@ -1,0 +1,15 @@
+Chicken Behavior Detection Pipeline
+Copyright 2026 Chicken Behavior Detection Pipeline contributors
+
+This pipeline uses Ultralytics under the GNU Affero General Public License,
+version 3. The original pipeline code is distributed under AGPL-3.0-only;
+see LICENSE. Ultralytics retains its own copyright and license notices.
+
+The default ByteTrack adapter uses Ultralytics' implementation. BoxMOT is no
+longer a dependency: its old NumPy/Torchvision constraints conflicted with
+this project's Python 3.11 environment. The previous unconfigured DeepOCSort
+and StrongSort adapters have been removed; config.yaml supports ByteTrack.
+
+Dataset exports and trained weights have separate provenance and terms.
+See dataset/README.md. The Django/React Roost application in this monorepo
+uses Apache License 2.0; see ../LICENSES.md for the component scopes.

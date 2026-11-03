@@ -1,7 +1,16 @@
-Roost — AI-Integrated Poultry Farm Management
+Roost ? AI-Integrated Poultry Farm Management
 Copyright 2026 Roost contributors
 
-Original application source and documentation are distributed under the
-Apache License, Version 2.0. Third-party dependencies retain their own
-copyright and license notices. This notice does not assign a license to
-third-party datasets, separately published weights, or hosted Roboflow models.
+The Roost application source in backend/ and frontend/, root documentation,
+docs/, and root CI configuration are distributed under Apache License 2.0;
+see LICENSE.
+
+The standalone pipeline/ component has its own AGPL-3.0-only license and
+notices in pipeline/LICENSE and pipeline/NOTICE. The dataset identified by
+its supplied export is CC BY 4.0; retain pipeline/dataset/ATTRIBUTION.md,
+MODIFICATIONS.md, LICENSE, and the original Roboflow notices with the data.
+See LICENSES.md for the component scopes.
+
+Third-party dependencies retain their own copyright and license notices.
+This notice does not assign a license to separately published weights,
+price history, or externally hosted Roboflow models.

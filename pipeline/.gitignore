@@ -1,0 +1,71 @@
+# Python environments and caches
+venv*/
+.venv*/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage*
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Credentials and workstation settings
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+*.log
+
+# Datasets belong in a Hugging Face DATASET repository.
+/dataset/*
+!/dataset/data.yaml
+!/dataset/README.md
+!/dataset/ATTRIBUTION.md
+!/dataset/MODIFICATIONS.md
+!/dataset/LICENSE
+!/dataset/README.dataset.txt
+!/dataset/README.roboflow.txt
+!/dataset/upstream/
+/dataset/upstream/*
+!/dataset/upstream/data.yaml
+/dataset-coco/
+/datasets/
+*.cache
+*.zip
+*.tar*
+
+# Weights belong in a Hugging Face MODEL repository.
+*.pt
+*.pth
+*.onnx
+*.ckpt
+*.engine
+*.tflite
+*.keras
+*.h5
+*.safetensors
+*.pkl
+*.joblib
+/models/
+
+# Generated training, inference, and personal scratch files
+/runs/
+/output/
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.docx
+*imp links*
+
+# Ultralytics local settings fallback
+/Ultralytics/
+
+# Accidental literal brace-expansion directories created on Windows
+/{*/

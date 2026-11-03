@@ -22,7 +22,7 @@ py -3.11 -m venv backend/.venv
 .\backend\.venv\Scripts\python.exe -c "import sys, django; print(sys.version); print(django.get_version()); assert django.get_version() == '5.2.18'"
 .\backend\.venv\Scripts\python.exe backend/manage.py check
 .\backend\.venv\Scripts\python.exe backend/manage.py makemigrations --check --dry-run
-.\backend\.venv\Scripts\python.exe backend/manage.py test --noinput
+.\backend\.venv\Scripts\python.exe backend/manage.py test backend --top-level-directory backend --noinput
 ```
 
 After the checks, use this same interpreter for `migrate` and `runserver`
@@ -38,5 +38,6 @@ If pip reports no matching versions and your machine has `PIP_NO_INDEX=1`,
 remove that setting in the terminal used for installation, or supply your
 organization's approved package index. The public packages are on PyPI.
 
-The independent chicken behavior pipeline has its own environment and
-requirements. Do not install its PyTorch dependencies into this Django venv.
+The [chicken behavior pipeline](../pipeline/README.md) lives in `pipeline/`
+within this monorepo and uses its own `pipeline/.venv` and requirements.
+Keep that environment separate from the Django backend environment.

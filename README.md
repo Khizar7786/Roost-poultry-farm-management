@@ -8,6 +8,10 @@ Chick counting calls a hosted Roboflow workflow. Market price forecasting
 runs a trained LSTM and XGBoost classifier inside Django. Mortality is
 logged manually. The chatbot uses a keyword-based FAQ service.
 
+This monorepo also includes a standalone [chicken behavior pipeline](pipeline/README.md)
+using YOLO and ByteTrack. The backend, frontend, and pipeline share this Git
+repository; each component keeps its own dependencies and checks.
+
 ## Requirements
 
 - Python **3.11**, Django **5.2.18 LTS**, and XGBoost **3.2.0** are the verified backend baseline.
@@ -23,6 +27,8 @@ The backend uses SQLite locally. Install dependencies from
 [`backend/requirements.txt`](backend/requirements.txt) and
 [`frontend/package-lock.json`](frontend/package-lock.json); virtual
 environments and `node_modules` are excluded from source control.
+The pipeline uses a separate Python environment under `pipeline/.venv`;
+follow [its setup guide](pipeline/README.md) from the `pipeline/` directory.
 
 ## Run locally on Windows
 
@@ -107,11 +113,14 @@ To reset a password, run from the repository root:
 From the repository root:
 
 ```powershell
-.\backend\venv\Scripts\python.exe backend/manage.py test --noinput
+.\backend\venv\Scripts\python.exe backend/manage.py test backend --top-level-directory backend --noinput
 .\backend\venv\Scripts\python.exe -m pip check
 .\backend\venv\Scripts\python.exe backend/manage.py check
 .\backend\venv\Scripts\python.exe backend/manage.py makemigrations --check --dry-run
 ```
+
+The explicit `backend` discovery directory keeps the API suite separate
+from the standalone pipeline when running from the monorepo root.
 
 The API suite covers registration, JWT login and refresh, deactivation,
 roles, farm isolation, vaccination/shed ownership, feed validation, atomic
@@ -125,10 +134,18 @@ Build the frontend from `frontend/`:
 npm.cmd run build -- --configLoader native
 ```
 
-The [GitHub Actions workflow](.github/workflows/ci.yml) runs the backend
-checks and frontend build on pushes and pull requests. A browser end-to-end
-test suite is not included. Live Roboflow inference and forecast quality
-require separate verification with the configured service/model bundle.
+The [GitHub Actions workflow](.github/workflows/ci.yml) runs three independent
+jobs on pushes and pull requests: backend checks, the frontend build, and
+pipeline dependency checks and unit tests. Run the pipeline suite from its
+own directory and environment:
+
+```powershell
+Set-Location pipeline
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+A browser end-to-end test suite is not included. Live Roboflow inference and
+forecast quality require separate verification with the configured service/model bundle.
 
 ## Project layout
 
@@ -136,26 +153,34 @@ require separate verification with the configured service/model bundle.
 backend/                  Django apps, REST API, migrations, API tests
 backend/ai_integration/    Inference code and retraining scripts
 frontend/                 React UI, Vite, Tailwind, npm lockfile
+pipeline/                 Standalone YOLO/ByteTrack source, configuration, and tests
+pipeline/dataset/         Dataset card, attribution, license, and YAML; binaries on Hugging Face
 docs/MODELS.md            Model upload, download, and integrity instructions
 docs/PUBLISHING.md        GitHub/Hugging Face publishing steps
-LICENSE                   Apache License 2.0
+LICENSE                   Apache License 2.0 for the Roost application and root documentation
+LICENSES.md               License scopes for application, pipeline, and dataset
 NOTICE                    Attribution for original project code
 ```
 
 See the [backend guide](backend/README.md) for endpoint details and the
-[frontend guide](frontend/README.md) for the UI structure.
+[frontend guide](frontend/README.md) for the UI structure. The
+[pipeline guide](pipeline/README.md) covers behavior detection, training, and
+its separate environment.
 
 ## Models and publishing
 
-Application source goes to GitHub. Price-model artifacts go to a separate
-Hugging Face model repository. Follow [model setup](docs/MODELS.md) to
-download a pinned model version into the path expected by Django, and
-[publishing instructions](docs/PUBLISHING.md) before the first push.
+All application and pipeline source lives in this GitHub monorepo. Price-model
+artifacts and behavior-detector weights belong in Hugging Face model repositories;
+images and annotations belong in a Hugging Face dataset repository.
+Follow [price-model setup](docs/MODELS.md), the [dataset card](pipeline/dataset/README.md),
+and the [publishing guide](docs/PUBLISHING.md) for the corresponding paths and notices.
 
 ## License
 
-Original application source and documentation are licensed under
-[Apache License 2.0](LICENSE). See [NOTICE](NOTICE).
-Dependencies retain their own licenses. The code license does not grant
-rights to third-party datasets, externally hosted Roboflow models, or a
-separately published model bundle; record those terms in the model card.
+The Roost application and root documentation use [Apache License 2.0](LICENSE).
+The standalone pipeline uses [AGPL-3.0-only](pipeline/LICENSE). The source dataset
+is identified as [CC BY 4.0](pipeline/dataset/LICENSE), with its notices and
+modification record preserved under `pipeline/dataset/`.
+See [LICENSES.md](LICENSES.md) for the component scopes and [NOTICE](NOTICE)
+for attribution. Dependencies and separately published model bundles retain
+their own terms; record weight and data provenance in their model cards.

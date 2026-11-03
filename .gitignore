@@ -29,3 +29,26 @@ backend/staticfiles/
 backend/ai_integration/ml_artifacts/*
 !backend/ai_integration/ml_artifacts/README.md
 backend/ai_integration/scripts/data/*.csv
+
+# Model binaries, dataset archives, and video belong outside Git.
+*.pt
+*.pth
+*.onnx
+*.ckpt
+*.engine
+*.tflite
+*.keras
+*.h5
+*.safetensors
+*.pkl
+*.joblib
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.cache
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm

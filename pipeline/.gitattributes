@@ -1,0 +1,4 @@
+# Preserve supplied source notices and configuration byte for byte.
+dataset/README.dataset.txt -text
+dataset/README.roboflow.txt -text
+dataset/upstream/data.yaml -text

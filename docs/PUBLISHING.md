@@ -1,77 +1,93 @@
-# Publish the application and models
-
-Use one GitHub repository for application source and one Hugging Face model
-repository for the price bundle. This guide does not create accounts,
-repositories, or deployments automatically.
-
-## Included and excluded files
-
-Commit backend `.py` source, migrations, tests, requirements, frontend
-source/assets/configuration, `package.json`, `package-lock.json`, docs,
-environment examples, `LICENSE`, and `NOTICE`.
-
-The root `.gitignore` excludes virtual environments including `venv_old`,
-`node_modules`, build output, real `.env` files, SQLite databases,
-uploads, runtime logs/PIDs, model artifacts, and the raw training CSV.
-These exclusions preserve the files locally. Keep database backups outside
-the repository; a public source repository must not contain registered
-accounts or their password hashes.
-
-## Before the first push
-
-1. Configure your replacement Roboflow key outside source code and revoke
-   the previously shared key in your Roboflow account.
-2. Run the checks in the [root README](../README.md#automated-checks).
-3. Review the [Apache 2.0 license](../LICENSE) and [NOTICE](../NOTICE).
-   Dependencies, datasets, and externally hosted models retain their own terms.
-4. Publish and document a complete model bundle following [MODELS.md](MODELS.md).
-   Use a private model repository until its redistribution terms are established.
-
-## GitHub upload
-
-Create an empty GitHub repository without an automatically generated README,
-license, or `.gitignore`. From the application repository root:
-
-```powershell
-git init
-git branch -M main
-git add .
-git status --short
-git diff --cached --stat
-git diff --cached
-```
-
-Inspect the staged files for credentials, account data, local uploads,
-installed packages, and model artifacts before continuing. Then replace
-the placeholder repository URL and upload:
-
-```powershell
-git commit -m "Initial Roost FYP source"
-git remote add origin https://github.com/Khizar7786/Roost-poultry-farm-management.git
-git push -u origin main
-```
-
-If the directory is already a Git repository, inspect `git status` and
-`git remote -v` and use its existing history and remote rather than repeating
-initialization. `.gitignore` does not remove files already tracked in Git.
-Exposed credentials must be revoked/rotated even if a later commit removes them.
-
-## Automated checks on GitHub
-
-`.github/workflows/ci.yml` runs on pushes and pull requests with read-only
-repository permissions. It installs Python 3.11 backend dependencies and
-runs Django checks, migration consistency, and the API suite. A second job
-installs frontend dependencies with `npm ci` and builds with Node 22.
-
-The checks require no model download or service credentials. They do not
-publish artifacts or deploy the application. The first hosted CI result
-will be available after you push this repository to GitHub.
-
-Uploading code and model artifacts is separate from deploying the frontend
-and Django backend as a publicly accessible website.
-
-## References
-
-- [GitHub Python CI](https://docs.github.com/en/actions/tutorials/build-and-test-code/python)
-- [Credential exposure guidance](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
-- [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+# Publish the monorepo, datasets, and models
+
+All FYP source lives in one GitHub repository:
+https://github.com/Khizar7786/Roost-poultry-farm-management.
+It contains `backend/`, `frontend/`, and the standalone `pipeline/` component.
+Each component has its own dependencies and checks.
+
+## File destinations
+
+| Destination | Contents |
+| --- | --- |
+| This GitHub monorepo | Backend/frontend/pipeline source, tests, configuration, requirements and npm lockfile, root workflow, docs, licenses, dataset card and source notices |
+| Hugging Face price-model repository | The six-file price bundle described in [MODELS.md](MODELS.md), plus its completed model card |
+| Hugging Face behavior-model repository | Selected trained `.pt`/exported weights and a model card with source, evaluation, applicable license, and pinned version |
+| Hugging Face dataset repository | Images, YOLO annotations, split folders, and all dataset attribution/license/modification files |
+| Local only | Python environments, `node_modules`, databases, account records, real environment files, uploads, private footage, generated outputs, and caches |
+
+The root and pipeline `.gitignore` files exclude binary model files, dataset
+images and annotations, archives, footage, environments, and runtime data.
+These rules preserve files locally. They do not remove files already tracked
+by Git. Inspect `git status`, `git diff --cached --stat`, and the staged diff
+before each public push.
+
+## GitHub updates
+
+The repository is already initialized and `origin` points to the URL above.
+Run from the repository root:
+
+```powershell
+git status --short
+git add .
+git diff --cached --stat
+git diff --cached
+git commit -m "Describe the source change"
+git push origin main
+```
+
+Keep all three components in this repository. Create Python environments
+individually in `backend/` and `pipeline/`, and install frontend dependencies
+from `frontend/package-lock.json`.
+
+The source licenses are scoped by component: Apache 2.0 for Roost,
+AGPL-3.0-only for the standalone pipeline, and CC BY 4.0 for the identified
+chicken dataset. Read [LICENSES.md](../LICENSES.md) and [NOTICE](../NOTICE).
+Third-party dependencies and model releases retain their own terms.
+
+Configure the replacement Roboflow key outside source and revoke any old
+shared key in your Roboflow account. Databases containing registered users
+and password hashes belong outside public Git history.
+
+## Hugging Face artifacts
+
+For price forecasting, upload all six runtime files together using
+[MODELS.md](MODELS.md). Complete [the price-model card](MODEL_CARD_TEMPLATE.md)
+with the weights license and bundled history's redistribution terms before
+making that model repository public.
+
+For chicken behavior detection, select the trained detector weights from the
+training run and upload them to a separate Hugging Face **model** repository.
+Record its architecture, class mapping, training-data source, evaluation split
+and metrics, upstream terms, and applicable weights license in its model card.
+Model binaries remain outside Git; download them into `pipeline/` and configure
+`model.weights` or `--weights` using [the pipeline guide](../pipeline/README.md).
+
+For the dataset, copy the contents of your populated `pipeline/dataset/`
+folder into the root of a Hugging Face **dataset** repository. Include
+`README.md`, `ATTRIBUTION.md`, `LICENSE`, `MODIFICATIONS.md`, the two original
+Roboflow notices, `data.yaml`, `upstream/`, and the image/label split folders.
+The GitHub checkout contains the metadata only; restore image and label files
+from your authorized dataset copy before preparing that upload.
+
+The [dataset card](../pipeline/dataset/README.md) describes the FYP working
+copy: 9,563 training and 2,391 validation images, with the source validation
+and test filenames combined. It has no separate test split. Preserve the
+source credit, CC BY 4.0 terms, and modification record with redistributions.
+
+After creating the Hugging Face repositories, put their actual IDs and pinned
+commit revisions in the corresponding setup guides and cards. No artifact
+repository ID is assumed by the source code.
+
+## Automated checks
+
+[The root workflow](../.github/workflows/ci.yml) runs three independent jobs on
+pushes and pull requests with read-only repository permissions:
+
+- Backend: Python 3.11, the pinned Django baseline, dependency consistency,
+  configuration and migration checks, and API tests.
+- Frontend: Node 22, `npm ci`, and the production build.
+- Pipeline: Python 3.11, CPU PyTorch, dependency consistency, and unit tests
+  from the `pipeline/` directory.
+
+The checks use no real model files, dataset images, or API keys. Uploading
+source and artifacts is separate from deploying a publicly accessible app.

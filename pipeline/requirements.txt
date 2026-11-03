@@ -1,0 +1,12 @@
+# Python 3.11. Torch +cu121 builds with these versions also satisfy the pins.
+ultralytics==8.4.75
+torch==2.5.1
+torchvision==0.20.1
+opencv-python==4.11.0.86
+numpy==2.4.6
+pandas==2.3.3
+scipy==1.15.3
+Pillow==12.2.0
+tqdm==4.68.3
+PyYAML==6.0.3
+lapx==0.5.13

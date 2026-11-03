@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['chicken']
+
+roboflow:
+  workspace: muhammads-workspace-a0tjd
+  project: combined-dataset-uqmyy
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/muhammads-workspace-a0tjd/combined-dataset-uqmyy/dataset/1

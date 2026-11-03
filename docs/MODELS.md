@@ -1,7 +1,10 @@
 # Price-model bundle
 
-The GitHub repository contains inference and training code. Publish the
-trained price-model bundle separately as a Hugging Face **model** repository.
+The GitHub monorepo contains application and behavior-pipeline source. This
+guide covers the price-model bundle; behavior weights and dataset publishing
+are documented in [the publishing guide](PUBLISHING.md) and
+[the pipeline guide](../pipeline/README.md).
+Publish the trained price-model bundle separately as a Hugging Face **model** repository.
 The Hugging Face repository stores artifacts; uploading them does not
 deploy the Django backend or automatically provide a working inference API.
 

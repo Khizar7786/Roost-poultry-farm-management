@@ -1,0 +1,40 @@
+# Paths below are resolved relative to this configuration file.
+model:
+  weights: runs/detect/runs/train/chicken_yolov8s/weights/best.pt
+  pretrained_base: yolov8s.pt
+  confidence: 0.2
+  iou: 0.5
+  imgsz: 640
+  device: cpu  # Set to "0" only when using a configured CUDA GPU.
+
+training:
+  data_yaml: dataset/data.yaml
+  project: runs/train
+  name: chicken_yolo
+  epochs: 100
+  imgsz: 640
+  batch: 8
+  workers: 0
+  amp: false
+  cache: false
+
+tracker:
+  type: bytetrack
+  config: tracker/bytetrack.yaml
+
+behavior:
+  huddle_k_neighbors: 3
+  huddle_dist_px: 130
+  ill_velocity_px: 8
+  ill_window_sec: 30
+  dead_velocity_px: 0
+  dead_window_sec: 160
+
+video:
+  fps_override: null
+  output_codec: mp4v
+
+logging:
+  save_csv: true
+  csv_path: output/behavior_log.csv
+  log_interval_sec: 1
